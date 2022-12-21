@@ -75,7 +75,10 @@ PixelShader =
 			{
 				float4 Diffuse = PdxTex2D( BorderTexture, Input.UV );
 
+				// MOD(godherja-snowfall)
+				//Diffuse.rgb = ApplyFogOfWar( Diffuse.rgb, Input.WorldSpacePos, FogOfWarAlpha );
 				Diffuse.rgb = GH_ApplyAtmosphericEffects( Diffuse.rgb, Input.WorldSpacePos, FogOfWarAlpha );
+				// END MOD
 				Diffuse.rgb = ApplyDistanceFog( Diffuse.rgb, Input.WorldSpacePos );
 				Diffuse.a *= _Alpha;
 				
@@ -97,7 +100,10 @@ PixelShader =
 				float vPulseFactor = saturate( smoothstep( 0.0f, 1.0f, 0.4f + sin( GlobalTime * 2.5f ) * 0.25f ) );
 				Diffuse.rgb = saturate( Diffuse.rgb * vPulseFactor );
 				
+				// MOD(godherja-snowfall)
+				//Diffuse.rgb = ApplyFogOfWar( Diffuse.rgb, Input.WorldSpacePos, FogOfWarAlpha );
 				Diffuse.rgb = GH_ApplyAtmosphericEffects( Diffuse.rgb, Input.WorldSpacePos, FogOfWarAlpha );
+				// END MOD
 				Diffuse.rgb = ApplyDistanceFog( Diffuse.rgb, Input.WorldSpacePos );
 				Diffuse.a *= _Alpha;
 				
@@ -124,7 +130,10 @@ PixelShader =
 
 				Diffuse.rgb = saturate( Diffuse.rgb * colorMult );
 
+				// MOD(godherja-snowfall)
+				//Diffuse.rgb = ApplyFogOfWar( Diffuse.rgb, Input.WorldSpacePos, FogOfWarAlpha );
 				Diffuse.rgb = GH_ApplyAtmosphericEffects( Diffuse.rgb, Input.WorldSpacePos, FogOfWarAlpha );
+				// END MOD
 				Diffuse.rgb = ApplyDistanceFog( Diffuse.rgb, Input.WorldSpacePos );
 				Diffuse.a *= _Alpha;
 

@@ -108,7 +108,10 @@ PixelShader =
 			
 			float3 Color = CalculateSunLighting( MaterialProps, LightingProps, EnvironmentMap );
 
+			// MOD(godherja-snowfall)
+			//Color = ApplyFogOfWar( Color, WorldSpacePos, FogOfWarAlpha );
 			Color = GH_ApplyAtmosphericEffects( Color, WorldSpacePos, FogOfWarAlpha );
+			// END MOD
 			Color = ApplyDistanceFog( Color, WorldSpacePos );
 			
 			DebugReturn( Color, MaterialProps, LightingProps, EnvironmentMap );

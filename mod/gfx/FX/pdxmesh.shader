@@ -441,7 +441,10 @@ PixelShader =
 				#endif
 				
 				#ifndef UNDERWATER
+					// MOD(godherja-snowfall)
+					//Color = ApplyFogOfWar( Color, Input.WorldSpacePos, FogOfWarAlpha );
 					Color = GH_ApplyAtmosphericEffects( Color, Input.WorldSpacePos, FogOfWarAlpha );
+					// END MOD
 					Color = ApplyDistanceFog( Color, Input.WorldSpacePos );
 				#endif
 				

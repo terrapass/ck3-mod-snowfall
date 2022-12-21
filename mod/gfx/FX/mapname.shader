@@ -77,7 +77,10 @@ PixelShader =
 			
 			MixedColor.a *= Transparency;
 
+			// MOD(godherja-snowfall)
+			//MixedColor.rgb = ApplyFogOfWar( MixedColor.rgb, Input.WorldSpacePos, FogOfWarAlpha );
 			MixedColor.rgb = GH_ApplyAtmosphericEffects( MixedColor.rgb, Input.WorldSpacePos, FogOfWarAlpha );
+			// END MOD
 			MixedColor.rgb = ApplyDistanceFog( MixedColor.rgb, Input.WorldSpacePos );
 			
 			return MixedColor;

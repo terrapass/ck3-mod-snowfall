@@ -440,9 +440,8 @@ PixelShader =
 
 				float3 FinalColor = CalculateSunLighting( MaterialProps, LightingProps, EnvironmentMap );
 
-				// MOD(godherja)
-				// Moved below application of border and highlight colors,
-				// otherwise our nice FoW clouds from Vic3 get obscured by them.
+				// MOD(godherja-snowfall)
+				// Moved below application of border and highlight colors.
 				// #ifndef UNDERWATER
 				// 	FinalColor = ApplyFogOfWar( FinalColor, Input.WorldSpacePos, FogOfWarAlpha );
 				// 	FinalColor = ApplyDistanceFog( FinalColor, Input.WorldSpacePos );
@@ -461,7 +460,7 @@ PixelShader =
 					FinalColor = lerp( FinalColor, FlatMap, FlatMapLerp );
 				#endif
 
-				// MOD(godherja)
+				// MOD(godherja-snowfall)
 				#ifndef UNDERWATER
 					FinalColor = GH_ApplyAtmosphericEffects( FinalColor, Input.WorldSpacePos, FogOfWarAlpha );
 					FinalColor = ApplyDistanceFog( FinalColor, Input.WorldSpacePos );
@@ -536,7 +535,10 @@ PixelShader =
 				float3 FinalColor = CalculateSunLightingLowSpec( MaterialProps, LightingProps );
 
 				#ifndef UNDERWATER
+					// MOD(godherja-snowfall)
+					//FinalColor = ApplyFogOfWar( FinalColor, Input.WorldSpacePos, FogOfWarAlpha );
 					FinalColor = GH_ApplyAtmosphericEffects( FinalColor, Input.WorldSpacePos, FogOfWarAlpha );
+					// END MOD
 					FinalColor = ApplyDistanceFog( FinalColor, Input.WorldSpacePos );
 				#endif
 
