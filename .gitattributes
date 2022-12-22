@@ -1,3 +1,4 @@
 promo/**/*.png filter=lfs diff=lfs merge=lfs -text
 promo/**/*.gif filter=lfs diff=lfs merge=lfs -text
 promo/**/*.pdn filter=lfs diff=lfs merge=lfs -text
+promo/**/*.jpg filter=lfs diff=lfs merge=lfs -text
