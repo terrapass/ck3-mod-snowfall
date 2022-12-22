@@ -4,4 +4,5 @@ tags={
 	"Graphics"
 }
 name="Snowfall Visual Effect"
+picture="thumbnail.png"
 supported_version="1.8.1"
