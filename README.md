@@ -1,5 +1,4 @@
-<!-- TODO: Add Steam Workshop badge. -->
-<!--<a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2653885896"><img src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-steam-workshop.jross.me%2F2653885896&style=for-the-badge" alt="Steam Workshop subscribers"></a>-->
+<a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2905322430"><img src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-steam-workshop.jross.me%2F2905322430&style=for-the-badge" alt="Steam Workshop subscribers"></a>
 
 Snowfall Visual Effect
 ======================
