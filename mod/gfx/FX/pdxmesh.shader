@@ -444,8 +444,12 @@ PixelShader =
 					// MOD(godherja-snowfall)
 					//Color = ApplyFogOfWar( Color, Input.WorldSpacePos, FogOfWarAlpha );
 					Color = GH_ApplyAtmosphericEffects( Color, Input.WorldSpacePos, FogOfWarAlpha );
+					#ifndef NO_FOG
 					// END MOD
-					Color = ApplyDistanceFog( Color, Input.WorldSpacePos );
+						Color = ApplyDistanceFog( Color, Input.WorldSpacePos );
+					// MOD(godherja-snowfall)
+					#endif
+					// END MOD
 				#endif
 				
 				float Alpha = Diffuse.a;
@@ -506,6 +510,18 @@ RasterizerState ShadowRasterizerState
 RasterizerState SelectionRasterizerState
 {
 	DepthBias = -20000
+	SlopeScaleDepthBias = 2
+}
+
+RasterizerState TravelArrowMarkerRasterizerState
+{
+	DepthBias = -60000
+	SlopeScaleDepthBias = 2
+}
+
+RasterizerState TravelArrowMarkerShadowRasterizerState
+{
+	DepthBias = 40000
 	SlopeScaleDepthBias = 2
 }
 
@@ -736,6 +752,23 @@ Effect selection_markerShadow
 	
 	Defines = { "PDX_MESH_SNAP_VERTICES_TO_TERRAIN" }
 	RasterizerState = ShadowRasterizerState
+}
+
+Effect travel_arrow_marker
+{
+	VertexShader = "VS_standard"
+	PixelShader = "PS_standard"
+	BlendState = "alpha_blend"
+	DepthStencilState = "depth_no_write"
+	RasterizerState = TravelArrowMarkerRasterizerState
+	Defines = { "NO_FOG" }
+}
+Effect travel_arrow_markerShadow
+{
+	VertexShader = "VertexPdxMeshStandardShadow"
+	PixelShader = "PixelPdxMeshAlphaBlendShadow"
+	RasterizerState = TravelArrowMarkerShadowRasterizerState
+	Defines = { "NO_FOG" }
 }
 
 Effect material_test
