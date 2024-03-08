@@ -10,6 +10,8 @@ Includes = {
 	# END MOD
 	"bordercolor.fxh"
 	"dynamic_masks.fxh"
+	"legend.fxh"
+	"disease.fxh"
 }
 
 PixelShader =
@@ -107,7 +109,8 @@ PixelShader =
 			SLightingProperties LightingProps = GetSunLightingProperties( WorldSpacePos, ShadowTexture );
 			
 			float3 Color = CalculateSunLighting( MaterialProps, LightingProps, EnvironmentMap );
-
+			ApplyLegendDiffuse( Color, WorldSpacePos.xz * WorldSpaceToTerrain0To1 );
+			ApplyDiseaseDiffuse( Color, WorldSpacePos.xz * WorldSpaceToTerrain0To1 );
 			// MOD(godherja-snowfall)
 			//Color = ApplyFogOfWar( Color, WorldSpacePos, FogOfWarAlpha );
 			Color = GH_ApplyAtmosphericEffects( Color, WorldSpacePos, FogOfWarAlpha );
