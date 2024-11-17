@@ -9,7 +9,7 @@ This repository contains CK3 mod files which implement shader-based seasonal sno
 
 ![Animated GIF with rotating camera showing snow falling on a small part of CK3 terrain](https://media.githubusercontent.com/media/terrapass/ck3-mod-snowfall/master/promo/ck3_snowfall_0.gif)
 
-**The code is up-to-date as of CK3 v1.12 (Scythe).**
+**The code is up-to-date as of CK3 v1.14 (Traverse).**
 
 The contents of `mod/` directory in this repo are at the same time a small working mod in their own right, as well as a set of files ready for integration into any larger mods or total conversions, interested in having more atmospheric (pun intended) visual effects on the map. See [Integrating into Your Mod](#integration) for details.
 
