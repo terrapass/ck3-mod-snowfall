@@ -19,6 +19,7 @@ Includes = {
 	"lowspec.fxh"
 	"dynamic_masks.fxh"
 	"liquid.fxh"
+	"province_effects.fxh"
 }
 
 PixelShader =
@@ -497,7 +498,10 @@ PixelShader =
 
 				float2 ColorMapCoords =  Input.WorldSpacePos.xz *  WorldSpaceToTerrain0To1;
 				#if defined( APPLY_WINTER )
-					Diffuse.rgb = ApplyDynamicMasksDiffuse( Diffuse.rgb, Normal, ColorMapCoords );
+					float SnowHighlight = 0.0;
+					EffectIntensities ConditionData;
+					SampleProvinceEffectsMask( ColorMapCoords, ConditionData );
+					ApplySnowMaterialMesh( ConditionData, Diffuse.rgb, Properties, Normal, Input.WorldSpacePos.xz, SnowHighlight );
 				#endif
 				
 				SMaterialProperties MaterialProps = GetMaterialProperties( Diffuse.rgb, Normal, Properties.a, Properties.g, Properties.b );

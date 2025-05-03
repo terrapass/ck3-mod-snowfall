@@ -1,4 +1,7 @@
 Includes = {
+	# MOD(godherja-snowfall)
+	"cw/random.fxh"
+	# END MOD
 	"cw/camera.fxh"
 	"jomini/jomini_flat_border.fxh"
 	"jomini/jomini_fog.fxh"

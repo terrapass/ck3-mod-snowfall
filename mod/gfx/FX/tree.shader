@@ -1,4 +1,5 @@
 Includes = {
+	"cw/pdxterrain.fxh"
 	"cw/pdxmesh.fxh"
 	
 	"jomini/jomini_lighting.fxh"
@@ -12,6 +13,7 @@ Includes = {
 	"dynamic_masks.fxh"
 	"legend.fxh"
 	"disease.fxh"
+	"province_effects.fxh"
 }
 
 PixelShader = 
@@ -182,22 +184,21 @@ PixelShader =
 			float3 Normal = normalize( mul( NormalSample, TBN ) );
 			
 			float3 WorldSpacePos = Input.WorldSpacePos;
-		
+			float2 MapCoords = WorldSpacePos.xz * WorldSpaceToTerrain0To1;
 			float3 BorderColor;
 			float BorderPreLightingBlend;
 			float BorderPostLightingBlend;
 			GetBorderColorAndBlendGame( WorldSpacePos.xz, Diffuse.rgb, BorderColor, BorderPreLightingBlend, BorderPostLightingBlend );
 			Diffuse.rgb = lerp( Diffuse.rgb, BorderColor, BorderPreLightingBlend );
-				
-			ApplyHighlightColor( Diffuse.rgb, Input.WorldSpacePos.xz * WorldSpaceToTerrain0To1 );
-			CompensateWhiteHighlightColor( Diffuse.rgb, Input.WorldSpacePos.xz * WorldSpaceToTerrain0To1, SnowHighlight );
+			ApplyHighlightColor( Diffuse.rgb, MapCoords );
+			CompensateWhiteHighlightColor( Diffuse.rgb, MapCoords, SnowHighlight );
 			
 			SMaterialProperties MaterialProps = GetMaterialProperties( Diffuse.rgb, Normal, Properties.a, Properties.g, Properties.b );
 			SLightingProperties LightingProps = GetSunLightingProperties( WorldSpacePos, ShadowTexture );
 	
 			float3 Color = CalculateSunLighting( MaterialProps, LightingProps, EnvironmentMap );
-			ApplyLegendDiffuse( Color, WorldSpacePos.xz * WorldSpaceToTerrain0To1 );
-			ApplyDiseaseDiffuse( Color, WorldSpacePos.xz * WorldSpaceToTerrain0To1 );
+			ApplyLegendDiffuse( Color, MapCoords );
+			ApplyDiseaseDiffuse( Color, MapCoords );
 			// MOD(godherja-snowfall)
 			//Color = ApplyFogOfWar( Color, WorldSpacePos, FogOfWarAlpha );
 			Color = GH_ApplyAtmosphericEffects( Color, WorldSpacePos, FogOfWarAlpha );
@@ -219,6 +220,7 @@ PixelShader =
 		[[
 			PDX_MAIN
 			{
+				float2 ColorMapCoords = Input.WorldSpacePos.xz * WorldSpaceToTerrain0To1;
 				float4 Diffuse = PdxTex2D( DiffuseMap, Input.UV0 );
 				float3 NormalSample = UnpackRRxGNormal( PdxTex2D( NormalMap, Input.UV0 ) );
 				float3x3 TBN = Create3x3( normalize( Input.Tangent ), normalize( Input.Bitangent ), normalize( Input.Normal ) );
@@ -228,6 +230,11 @@ PixelShader =
 				
 				//Opacity
 				Diffuse.a = ApplyOpacity( Diffuse.a, Input.Position.xy, Input.InstanceIndex );
+				
+				EffectIntensities ConditionData;
+				SampleProvinceEffectsMask( ColorMapCoords, ConditionData );
+				ApplyProvinceEffectsTree( ConditionData, Diffuse, ColorMapCoords, Input.WorldSpacePos.xz );
+
 				clip( Diffuse.a - 0.4f );
 				
 				//Tint
@@ -240,8 +247,9 @@ PixelShader =
 				
 				//Colormap
 				float SnowHighlight = 0.0f;
-				float2 ColorMapCoords = Input.WorldSpacePos.xz * WorldSpaceToTerrain0To1;
-				Diffuse.rgb = ApplyDynamicMasksDiffuse( Diffuse.rgb, Normal, ColorMapCoords, SnowHighlight );
+				//Diffuse.rgb = ApplyDynamicMasksDiffuse( Diffuse.rgb, Normal, ColorMapCoords, SnowHighlight );
+				ApplySnowMaterialMesh( ConditionData, Diffuse.rgb, Properties, Normal, Input.WorldSpacePos.xz, SnowHighlight );
+
 #if defined( PDX_OSX ) && defined( PDX_OPENGL )
 				// The amount of texture samplers is limited on Mac, so we don't read the data for the ColorMap directly
 				// from a texture. Instead we assign a default gray value here. This is also done for the terrain (on Mac)

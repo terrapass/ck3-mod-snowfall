@@ -12,6 +12,7 @@ Includes = {
 	"dynamic_masks.fxh"
 	"legend.fxh"
 	"disease.fxh"
+	"province_effects.fxh"
 }
 
 PixelShader =
@@ -96,8 +97,12 @@ PixelShader =
 			
 			float2 ColorMapCoords = WorldSpacePos.xz * WorldSpaceToTerrain0To1;
 
+			EffectIntensities ConditionData;
+			SampleProvinceEffectsMask( ColorMapCoords, ConditionData );
+			ApplyProvinceEffectsDecal( ConditionData, Diffuse, ColorMapCoords );
+
 			float SnowHighlight = 0.0f;
-			Diffuse = ApplyDynamicMasksDiffuse( Diffuse, Normal, ColorMapCoords, SnowHighlight );
+			ApplySnowMaterialMesh( ConditionData, Diffuse, Properties, Normal, WorldSpacePos.xz, SnowHighlight );
 
 			float3 ColorMap = PdxTex2D( ColorTexture, float2( ColorMapCoords.x, 1.0 - ColorMapCoords.y ) ).rgb;
 			Diffuse = GetOverlay( Diffuse, ColorMap, 0.5 );

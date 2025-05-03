@@ -18,6 +18,7 @@ Includes = {
 	"cw/lighting.fxh"
 	"dynamic_masks.fxh"
 	"disease.fxh"
+	"province_effects.fxh"
 }
 
 VertexStruct VS_OUTPUT_PDX_TERRAIN
@@ -444,6 +445,10 @@ PixelShader =
 #else
 				float3 ColorMap = PdxTex2D( ColorTexture, float2( ColorMapCoords.x, 1.0 - ColorMapCoords.y ) ).rgb;
 #endif
+				float WaterNormalLerp = 0.0;
+				EffectIntensities ConditionData;
+				SampleProvinceEffectsMask( ColorMapCoords, ConditionData );
+				ApplyProvinceEffectsTerrain( ConditionData, DetailDiffuse, DetailNormal, DetailMaterial, Input.WorldSpacePos, WaterNormalLerp );
 				
 				float3 FlatMap = float3( vec3( 0.5f ) ); // neutral overlay
 				#ifdef TERRAIN_FLAT_MAP_LERP
@@ -452,11 +457,11 @@ PixelShader =
 
 				float3 Normal = CalculateNormal( Input.WorldSpacePos.xz );
 
-				float3 ReorientedNormal = ReorientNormal( Normal, DetailNormal );
+				float3 ReorientedNormal = ReorientNormal( lerp( Normal, float3( 0.0, 1.0, 0.0 ), WaterNormalLerp ), DetailNormal );
 
 				float SnowHighlight = 0.0f;
 				#ifndef UNDERWATER
-					DetailDiffuse.rgb = ApplyDynamicMasksDiffuse( DetailDiffuse.rgb, ReorientedNormal, ColorMapCoords );
+					ApplySnowMaterialTerrain( ConditionData, DetailDiffuse, DetailNormal, DetailMaterial, Input.WorldSpacePos.xz, SnowHighlight );
 				#endif
 
 				float3 Diffuse = GetOverlay( DetailDiffuse.rgb, ColorMap, ( 1 - DetailMaterial.r ) * COLORMAP_OVERLAY_STRENGTH );
